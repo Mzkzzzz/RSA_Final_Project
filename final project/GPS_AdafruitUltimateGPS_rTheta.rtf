@@ -1,0 +1,165 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red96\green126\blue3;\red255\green255\blue255;\red61\green73\blue78;
+\red9\green74\blue76;\red131\green148\blue149;\red199\green63\blue5;\red52\green62\blue66;\red17\green134\blue139;
+}
+{\*\expandedcolortbl;;\cssrgb\c44706\c55686\c0;\cssrgb\c100000\c100000\c100000;\cssrgb\c30588\c35686\c38039;
+\cssrgb\c0\c36078\c37255;\cssrgb\c58431\c64706\c65098;\cssrgb\c82745\c32941\c0;\cssrgb\c26275\c30980\c32941;\cssrgb\c0\c59216\c61569;
+}
+\margl1440\margr1440\vieww18540\viewh9560\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs36 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 #include\cf4 \strokec4  \cf5 \strokec5 <Adafruit_GPS.h>\cf4 \cb1 \strokec4 \
+\cf2 \cb3 \strokec2 #include\cf4 \strokec4  \cf5 \strokec5 <SoftwareSerial.h>\cf4 \cb1 \strokec4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6 // Connect the GPS TX (transmit) pin to D8 (Arduino RX)\cf4 \cb1 \strokec4 \
+\cf6 \cb3 \strokec6 // Connect the GPS RX (receive) pin to D7 (Arduino TX)\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3 SoftwareSerial \cf7 \strokec7 mySerial\cf8 \strokec8 (\cf5 \strokec5 8\cf4 \strokec4 , \cf5 \strokec5 7\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3 Adafruit_GPS \cf7 \strokec7 GPS\cf8 \strokec8 (\cf4 \strokec4 &\cf8 \strokec8 mySerial)\cf4 \strokec4 ;\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf9 \cb3 \strokec9 float\cf4 \strokec4  startLat, startLon;\cb1 \
+\cf9 \cb3 \strokec9 int\cf4 \strokec4  degrees;\cb1 \
+\
+\cf9 \cb3 \strokec9 void\cf4 \strokec4  \cf7 \strokec7 setup\cf8 \strokec8 ()\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3   \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 begin\cf8 \strokec8 (\cf5 \strokec5 9600\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\
+\cb3   \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 begin\cf8 \strokec8 (\cf5 \strokec5 9600\cf8 \strokec8 )\cf4 \strokec4 ;\cf6 \strokec6   // 9600 NMEA is the default baud rate for Adafruit MTK GPS's\cf4 \cb1 \strokec4 \
+\cb3   \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 sendCommand\cf8 \strokec8 (\cf4 \strokec4 PMTK_SET_NMEA_OUTPUT_RMCONLY\cf8 \strokec8 )\cf4 \strokec4 ;\cf6 \strokec6   // only the "minimum recommended" data\cf4 \cb1 \strokec4 \
+\cb3   \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 sendCommand\cf8 \strokec8 (\cf4 \strokec4 PMTK_SET_NMEA_UPDATE_2HZ\cf8 \strokec8 )\cf4 \strokec4 ;\cf6 \strokec6    // set update rate (1, 2, 5, or 10Hz)\cf4 \cb1 \strokec4 \
+\
+\cb3   \cf7 \strokec7 delay\cf8 \strokec8 (\cf5 \strokec5 50\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\
+\cb3   \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 "Searching for GPS satellite fix..."\cf8 \strokec8 )\cf4 \cb1 \strokec4 \
+\cb3   \cf2 \strokec2 while\cf4 \strokec4  \cf8 \strokec8 (\cf5 \strokec5 1\cf4 \strokec4  < \cf5 \strokec5 2\cf8 \strokec8 )\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\cb3     \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 read\cf8 \strokec8 ()\cf4 \strokec4 ;\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6 //      Serial.println(".");\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3     \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 newNMEAreceived\cf8 \strokec8 ())\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\cb3       \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 "New NMEA message received."\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\
+\cb3       \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 parse\cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 lastNMEA\cf8 \strokec8 ()))\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\cb3         \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 "Message parsed."\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3         \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 fix\cf8 \strokec8 )\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\cb3           \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 "Satellite fix."\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\
+\cb3           startLat = \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 latitude\cf4 \strokec4 ;\cb1 \
+\cb3           degrees = \cf8 \strokec8 (\cf9 \strokec9 int\cf8 \strokec8 (\cf4 \strokec4 startLat\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           startLat = \cf8 \strokec8 (\cf4 \strokec4 startLat - degrees * \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 60.0\cf4 \strokec4  + degrees;\cb1 \
+\cb3           \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 lat\cf4 \strokec4  == 'S'\cf8 \strokec8 )\cf4 \strokec4  startLat = -startLat;\cb1 \
+\
+\cb3           startLon = \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 longitude\cf4 \strokec4 ;\cb1 \
+\cb3           degrees = \cf8 \strokec8 (\cf9 \strokec9 int\cf8 \strokec8 (\cf4 \strokec4 startLon\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           startLon = \cf8 \strokec8 (\cf4 \strokec4 startLon - degrees * \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 60.0\cf4 \strokec4  + degrees;\cb1 \
+\cb3           \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 lon\cf4 \strokec4  == 'W'\cf8 \strokec8 )\cf4 \strokec4  startLon = -startLon;\cb1 \
+\
+\cb3           \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 print\cf8 \strokec8 (\cf5 \strokec5 "Starting Location found."\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 " "\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 print\cf8 \strokec8 (\cf4 \strokec4 startLat, \cf5 \strokec5 6\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 print\cf8 \strokec8 (\cf5 \strokec5 ", "\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf4 \strokec4 startLon, \cf5 \strokec5 6\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3           \cf2 \strokec2 break\cf4 \strokec4 ;\cb1 \
+\cb3         \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\cb3       \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\cb3     \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\cb3   \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\
+\cb3   \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 ""\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3   \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 ""\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6   //  Serial.println("x, y");\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3   \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf5 \strokec5 "r, theta"\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \cb3 \strokec8 \}\cf4 \cb1 \strokec4 \
+\
+\
+\pard\pardeftab720\partightenfactor0
+\cf9 \cb3 \strokec9 void\cf4 \strokec4  \cf7 \strokec7 loop\cf8 \strokec8 ()\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3   \cf9 \strokec9 float\cf4 \strokec4  currentLat, currentLon, x, y, r, theta;\cb1 \
+\cb3   \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 read\cf8 \strokec8 ()\cf4 \strokec4 ;\cb1 \
+\
+\cb3   \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 newNMEAreceived\cf8 \strokec8 ())\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6     //    Serial.println("New NMEA message received.");\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3     \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf4 \strokec4 !\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 parse\cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 lastNMEA\cf8 \strokec8 ()))\cf4 \strokec4  \cf8 \strokec8 \{\cf6 \strokec6   // this also sets the newNMEAreceived() flag to false\cf4 \cb1 \strokec4 \
+\cb3       \cf2 \strokec2 return\cf4 \strokec4 ;\cf6 \strokec6   // we can fail to parse a sentence in which case we should just wait for another\cf4 \cb1 \strokec4 \
+\cb3     \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6     //    Serial.println("Message parsed.");\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3     \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 fix\cf8 \strokec8 )\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6       //      Serial.println("Satellite fix.");\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3       currentLat = \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 latitude\cf4 \strokec4 ;\cb1 \
+\cb3       degrees = \cf8 \strokec8 (\cf9 \strokec9 int\cf8 \strokec8 (\cf4 \strokec4 currentLat\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       currentLat = \cf8 \strokec8 (\cf4 \strokec4 currentLat - degrees * \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 60.0\cf4 \strokec4  + degrees;\cb1 \
+\cb3       \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 lat\cf4 \strokec4  == 'S'\cf8 \strokec8 )\cf4 \strokec4  currentLat = -currentLat;\cb1 \
+\
+\cb3       currentLon = \cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 longitude\cf4 \strokec4 ;\cb1 \
+\cb3       degrees = \cf8 \strokec8 (\cf9 \strokec9 int\cf8 \strokec8 (\cf4 \strokec4 currentLon\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       currentLon = \cf8 \strokec8 (\cf4 \strokec4 currentLon - degrees * \cf5 \strokec5 100\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 60.0\cf4 \strokec4  + degrees;\cb1 \
+\cb3       \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf7 \strokec7 GPS\cf4 \strokec4 .\cf7 \strokec7 lon\cf4 \strokec4  == 'W'\cf8 \strokec8 )\cf4 \strokec4  currentLon = -currentLon;\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6       //  Test lat & lon for Annapolis; distance should be 36km from Baltimore\cf4 \cb1 \strokec4 \
+\cf6 \cb3 \strokec6 //      currentLon = 39.2721;\cf4 \cb1 \strokec4 \
+\cf6 \cb3 \strokec6 //      currentLon = -76.7319;\cf4 \cb1 \strokec4 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3       y = \cf7 \strokec7 distance\cf8 \strokec8 (\cf4 \strokec4 startLat, currentLat, startLon, startLon\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf4 \strokec4 currentLat < startLat\cf8 \strokec8 )\cf4 \strokec4  y = -y;\cb1 \
+\cb3       x = \cf7 \strokec7 distance\cf8 \strokec8 (\cf4 \strokec4 startLat, startLat, startLon, currentLon\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       \cf2 \strokec2 if\cf4 \strokec4  \cf8 \strokec8 (\cf4 \strokec4 currentLon < startLon\cf8 \strokec8 )\cf4 \strokec4  x = -x;\cb1 \
+\cb3       r = \cf7 \strokec7 sqrt\cf8 \strokec8 (\cf4 \strokec4 x * x + y * y\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       theta = \cf7 \strokec7 atan2\cf8 \strokec8 (\cf4 \strokec4 x, y\cf8 \strokec8 )\cf4 \strokec4  * \cf5 \strokec5 180\cf4 \strokec4  / M_PI;\cb1 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6       //      Serial.print(x);\cf4 \cb1 \strokec4 \
+\cf6 \cb3 \strokec6       //      Serial.print(", ");\cf4 \cb1 \strokec4 \
+\cf6 \cb3 \strokec6       //      Serial.println(y);\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3       \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 print\cf8 \strokec8 (\cf4 \strokec4 r\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 print\cf8 \strokec8 (\cf5 \strokec5 ", "\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\cb3       \cf7 \strokec7 Serial\cf4 \strokec4 .\cf7 \strokec7 println\cf8 \strokec8 (\cf4 \strokec4 theta\cf8 \strokec8 )\cf4 \strokec4 ;\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6       //      Serial.print("Speed (knots): "); Serial.println(GPS.speed);\cf4 \cb1 \strokec4 \
+\cf6 \cb3 \strokec6       //      Serial.print("Satellites: "); Serial.println((int)GPS.satellites);\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3     \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\cb3   \cf8 \strokec8 \}\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \cb3 \strokec8 \}\cf4 \cb1 \strokec4 \
+\
+\
+\pard\pardeftab720\partightenfactor0
+\cf9 \cb3 \strokec9 float\cf4 \strokec4  \cf7 \strokec7 distance\cf8 \strokec8 (\cf9 \strokec9 float\cf4 \strokec4  \cf8 \strokec8 lat1\cf4 \strokec4 , \cf9 \strokec9 float\cf4 \strokec4  \cf8 \strokec8 lat2\cf4 \strokec4 , \cf9 \strokec9 float\cf4 \strokec4  \cf8 \strokec8 lon1\cf4 \strokec4 , \cf9 \strokec9 float\cf4 \strokec4  \cf8 \strokec8 lon2)\cf4 \strokec4  \cf8 \strokec8 \{\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf6 \cb3 \strokec6   //  Input arguments: starting and ending latitude and longitude, degrees\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb3   \cf9 \strokec9 float\cf4 \strokec4  a, c, d;\cb1 \
+\cb3   \cf9 \strokec9 unsigned\cf4 \strokec4  \cf9 \strokec9 long\cf4 \strokec4  \cf9 \strokec9 const\cf4 \strokec4  R = \cf5 \strokec5 6371\cf4 \strokec4 e\cf5 \strokec5 3\cf4 \strokec4 ;\cf6 \strokec6  // Earth radius, m\cf4 \cb1 \strokec4 \
+\cb3   lat1 = M_PI / \cf5 \strokec5 180\cf4 \strokec4  * lat1;\cf6 \strokec6  //  Convert lat & lon angles to radians\cf4 \cb1 \strokec4 \
+\cb3   lat2 = M_PI / \cf5 \strokec5 180\cf4 \strokec4  * lat2;\cb1 \
+\cb3   lon1 = M_PI / \cf5 \strokec5 180\cf4 \strokec4  * lon1;\cb1 \
+\cb3   lon2 = M_PI / \cf5 \strokec5 180\cf4 \strokec4  * lon2;\cb1 \
+\
+\cb3   a = \cf7 \strokec7 sq\cf8 \strokec8 (\cf4 \strokec4  \cf7 \strokec7 sin\cf8 \strokec8 ((\cf4 \strokec4 lat2 - lat1\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 2.\cf8 \strokec8 )\cf4 \strokec4  \cf8 \strokec8 )\cf4 \strokec4  +\cf6 \strokec6   //  haversine formula, http://www.movable-type.co.uk/scripts/latlong.html\cf4 \cb1 \strokec4 \
+\cb3       \cf7 \strokec7 sq\cf8 \strokec8 (\cf4 \strokec4  \cf7 \strokec7 sin\cf8 \strokec8 ((\cf4 \strokec4 lon2 - lon1\cf8 \strokec8 )\cf4 \strokec4  / \cf5 \strokec5 2.\cf8 \strokec8 )\cf4 \strokec4  \cf8 \strokec8 )\cf4 \strokec4  *\cb1 \
+\cb3       \cf7 \strokec7 cos\cf8 \strokec8 ((\cf4 \strokec4 lat1\cf8 \strokec8 ))\cf4 \strokec4  * \cf7 \strokec7 cos\cf8 \strokec8 ((\cf4 \strokec4 lat2\cf8 \strokec8 ))\cf4 \strokec4 ;\cb1 \
+\cb3   c = \cf5 \strokec5 2\cf4 \strokec4  * \cf7 \strokec7 atan2\cf8 \strokec8 (\cf4 \strokec4  \cf7 \strokec7 sqrt\cf8 \strokec8 (\cf4 \strokec4 a\cf8 \strokec8 )\cf4 \strokec4 , \cf7 \strokec7 sqrt\cf8 \strokec8 (\cf5 \strokec5 1\cf4 \strokec4  - a\cf8 \strokec8 ))\cf4 \strokec4 ;\cb1 \
+\cb3   d = R * c;\cb1 \
+\cb3   \cf2 \strokec2 return\cf4 \strokec4  d;\cf6 \strokec6  //  distance in meters\cf4 \cb1 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \cb3 \strokec8 \}\cf4 \cb1 \strokec4 \
+\
+}
